@@ -7,7 +7,7 @@ class CicdTestApplicationTests {
 
     @Test
     void test() {
-        System.out.println("dsfsad");
+        throw new RuntimeException();
     }
 
 }

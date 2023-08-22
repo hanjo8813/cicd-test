@@ -1,0 +1,8 @@
+# spring actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+my-secret: ${MY_SECRET}

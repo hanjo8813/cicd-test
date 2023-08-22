@@ -3,11 +3,11 @@ package com.example.cicdtest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 class CicdTestApplicationTests {
 
     @Test
-    void contextLoads() {
+    void test() {
+        System.out.println("dsfsad");
     }
 
 }

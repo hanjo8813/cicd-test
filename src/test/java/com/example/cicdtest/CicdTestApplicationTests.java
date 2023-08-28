@@ -7,8 +7,6 @@ class CicdTestApplicationTests {
 
     @Test
     void test() {
-
-        
 //        throw new RuntimeException();
     }
 

@@ -1,5 +1,20 @@
-# 1. 그래들 빌드하기 -> jar 생성
-
-# 2. 내 원격 서버 (개발/운영)로 jar 파일을 전송한다
-
-# 3. 내 원격 서버에 접속해서 -> jar 파일을 실행시킨다
+#name: cd
+#
+#on:
+#  push:
+#    branches: [ "dev" ]
+#
+#jobs:
+#  deploy-ec2:
+#
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Deploy to Oracle Cloud
+#        uses: appleboy/ssh-action@master
+#        with:
+#          host: ${{ secrets.EC2_INSTANCE_HOST }}
+#          port: ${{ secrets.EC2_INSTANCE_PORT }}
+#          username: ${{ secrets.EC2_INSTANCE_USERNAME }}
+#          key: ${{ secrets.EC2_INSTANCE_PRIVATE_KEY }}
+#          script: |

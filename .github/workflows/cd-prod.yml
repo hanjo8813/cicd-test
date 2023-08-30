@@ -1,8 +1,8 @@
-#name: cd-prod
-#
-#on:
-#  push:
-#    branches: [ "main" ]
+name: cd-prod
+
+on:
+  push:
+    branches: [ "dummy" ]
 
 jobs:
   deploy-ec2:

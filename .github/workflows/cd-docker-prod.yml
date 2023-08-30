@@ -1,8 +1,8 @@
 name: cd-docker-prod
 
-#on:
-#  push:
-#    branches: [ "main" ]
+on:
+  push:
+    branches: [ "dummy" ]
 
 jobs:
   build-gradle:
@@ -21,4 +21,4 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: ./gradlew build
+          arguments: build

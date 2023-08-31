@@ -34,3 +34,8 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+//jar {
+//    // 빌드시 ...plain.jar 생성 X
+//    enabled = false
+//}

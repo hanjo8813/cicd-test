@@ -1,0 +1,13 @@
+name: test
+
+on: workflow_dispatch
+
+jobs:
+  test:
+    environment: prod
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 환경변수 확인
+        run: |
+          echo "확인 : ${{ secrets.MY_SECRET }}"

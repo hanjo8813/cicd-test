@@ -58,3 +58,6 @@ jobs:
           username: ${{ secrets.EC2_INSTANCE_USERNAME }}
           key: ${{ secrets.EC2_INSTANCE_PRIVATE_KEY }}
           script: |
+            docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY }}:${{ secrets.DOCKER_TAG }}
+            docker stop ${{ secrets.DOCKER_TAG }}
+            docker rm ${{ secrets.DOCKER_TAG }}

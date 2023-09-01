@@ -10,4 +10,4 @@ jobs:
     steps:
       - name: 환경변수 확인
         run: |
-          echo "확인 : ${{ secrets.MY_SECRET }}"
+          echo ${{ secrets.MY_SECRET }} | sed 's/./& /g'

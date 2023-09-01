@@ -2,19 +2,19 @@ version: "3"
 
 services:
   spring:
-    build: ..
-    image: spring-image
-    container_name: spring-container
+    build: ../..
+    image: spring-image-local
+    container_name: spring-container-local
     ports:
       - "8080:8080"
     environment:
-      - SPRING_PROFILES_ACTIVE=prod
-      - MY_SECRET=prodprod
+      - SPRING_PROFILES_ACTIVE=local
+      - MY_SECRET=locallocal
 
 #services:
 #  spring:
 #    image: ${DOCKER_USERNAME}/${DOCKER_REPOSITORY}:${DOCKER_TAG}
-#    container_name: spring-cont
+#    container_name: spring-container-local
 #    ports:
 #      - "8080:8080"
 #    env_file:

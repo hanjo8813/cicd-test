@@ -1,4 +1,4 @@
-name: cd-prod-with-docker-compose
+name: cd-prod-with-docker-compose-async
 
 #on:
 #  push:
@@ -6,7 +6,7 @@ name: cd-prod-with-docker-compose
 on: workflow_dispatch
 
 jobs:
-  deploy-to-ec2:
+  docker-build-push:
     environment: prod
     runs-on: ubuntu-latest
     steps:
@@ -43,8 +43,10 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY }}:${{ secrets.DOCKER_TAG }}
           platforms: linux/arm64
 
-      # --------------------------------------------------------------------------------------------------
-
+  send-files-to-ec2:
+    environment: prod
+    runs-on: ubuntu-latest
+    steps:
       - name: docker-compose에서 사용할 .env 파일 만들기
         run: |
           cd ./deploy/prod
@@ -59,7 +61,6 @@ jobs:
           echo '#!/bin/sh' >> spring.env
           echo 'MY_SECRET=${{ secrets.MY_SECRET }}' >> spring.env
 
-      # https://github.com/appleboy/scp-action
       - name: EC2에 배포 관련 파일 전송하기
         uses: appleboy/scp-action@master
         with:
@@ -67,10 +68,15 @@ jobs:
           port: ${{ secrets.EC2_INSTANCE_PORT }}
           username: ${{ secrets.EC2_INSTANCE_USERNAME }}
           key: ${{ secrets.EC2_INSTANCE_PRIVATE_KEY }}
-          source: "./deploy/prod/*" # github action 서버 내부 경로
-          target: "/srv/deploy"     # ec2 서버 내부 경로
-          strip_components: 1       # 덮어쓰기할 file depth
+          source: "./deploy/prod/*"
+          target: "/srv/deploy"
+          strip_components: 1
 
+  deploy-to-ec2:
+    needs: [ docker-build-push, send-files-to-ec2 ]
+    environment: prod
+    runs-on: ubuntu-latest
+    steps:
       - name: EC2에 원격 접속 후 배포하기
         uses: appleboy/ssh-action@master
         with:
@@ -78,8 +84,11 @@ jobs:
           port: ${{ secrets.EC2_INSTANCE_PORT }}
           username: ${{ secrets.EC2_INSTANCE_USERNAME }}
           key: ${{ secrets.EC2_INSTANCE_PRIVATE_KEY }}
+          # 배포 스크립트를 작성
           script: |
-            docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY }}:${{ secrets.DOCKER_TAG }}
-            docker-compose -p compose-prod down
-            docker-compose -p compose-prod up -d
-            docker image prune -f
+            cd /srv/deploy/dev
+
+            bash deploy.sh \
+            ${{ secrets.DOCKER_USERNAME }} \
+            ${{ secrets.DOCKER_REPOSITORY }} \
+            ${{ secrets.DOCKER_TAG }}

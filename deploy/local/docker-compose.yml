@@ -14,9 +14,13 @@ services:
 #services:
 #  spring:
 #    image: ${DOCKER_USERNAME}/${DOCKER_REPOSITORY}:${DOCKER_TAG}
-#    container_name: spring-container-local
+#    container_name: ${DOCKER_TAG}
 #    ports:
 #      - "8080:8080"
+#    # 노출되도 되는 환경변수
+#    environment:
+#      - SPRING_PROFILES_ACTIVE=local
+#    # 노출되면 안되는 환경변수
 #    env_file:
 #      - spring.env
 

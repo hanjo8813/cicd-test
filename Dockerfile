@@ -22,3 +22,5 @@ ENTRYPOINT ["java", "-jar", "/app.jar"]
 # 도커허브 형식에 맞춰 이미지 빌드 : docker build -t username/repository:tag .
 # 도커허브에 이미지 푸시 : docker push username/repository:tag
 # 도커허브 이미지 풀 : docker pull username/repository:tag
+
+# hanjo8813/cicd-test:spring-local

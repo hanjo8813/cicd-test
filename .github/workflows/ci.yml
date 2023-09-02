@@ -1,33 +1,89 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
-
 name: ci
 
-on:
-  push:
-    branches: [ "main", "dev" ]
-  pull_request:
-    branches: [ "main", "dev" ]
+#on:
+#  pull_request:
+#    branches: [ "main", "dev" ]
+on: workflow_dispatch
+
+# 이렇게 안하고 repository settings 에서 설정해도됨
+permissions:
+  checks: write
+  pull-requests: write
 
 jobs:
-  build-gradle:
+#  assign-reviewer:
+#    runs-on: ubuntu-latest
+#    steps:
+#      # https://github.com/hkusu/review-assign-action
+#      - name: PR Assignee + 리뷰어 자동 지정 (PR open 이벤트에만 동작)
+#        uses: hkusu/review-assign-action@v1
+#        with:
+#          assignees: ${{ github.actor }}
+#          reviewers: hanjo8813, kylekim2123
+#          max-num-of-reviewers: 2
+#          ready-comment: '<reviewers> 코드 리뷰 해주세요~'
 
+  build-gradle-and-report:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        
-    - name: Build with Gradle
-      uses: gradle/gradle-build-action@v2
-      with:
-        arguments: build
+      - name: github 체크아웃
+        uses: actions/checkout@v3
+
+      - name: jdk 세팅
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: SonarCloud 결과물 캐싱하기
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      # https://github.com/gradle/gradle-build-action
+      - name: gradle 빌드하기 (sonarqube 포함)
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build sonar --info
+        # SonarCloud 연동을 위한 환경변수
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      # https://github.com/EnricoMi/publish-unit-test-result-action
+      - name: 테스트 결과를 'PR 코멘트'로 자동 작성
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()  # 실패 여부 상관없이 항상 실행~
+        with:
+          files: build/test-results/test/TEST-*.xml
+
+      # https://github.com/mikepenz/action-junit-report
+      - name: 테스트 코드 중 테스트 실패한 부분에 'PR check'로 자동 작성
+        uses: mikepenz/action-junit-report@v3
+        if: always()
+        with:
+          report_paths: build/test-results/test/TEST-*.xml
+
+      # https://github.com/8398a7/action-slack
+      - name: 빌드 실패시 slack 알람 보내기
+        uses: 8398a7/action-slack@v3
+        if: failure()
+        with:
+          status: ${{ job.status }}
+          fields: repo, message, commit, author, action, eventName, ref, workflow, job,took
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_URL_CICD }}
+
+
+############################# ci 정리 #############################
+# 1. ci 워크플로우에서 `gradlew build sonar --info` 명령어 실행
+# 2. 일단 build부터 돌아감 → test도 같이 돌아감
+# 3. test 돌면 JACOCO 돌아감
+#    -> 여기서 커버리지 만족 못하면 build는 취소됨
+#    -> 실패해도 JACOCO xml 리포트는 남음
+# 4. build 후 gradle sonar task 실행됨
+# 5. 정적코드 분석 결과 + JACOCO 리포트 엮어서 sonar 리포트로 만들고 sonar cloud로 전송
+# 6. 나머지 애들은 위 step 결과와 상관없이 돌아감.
+####################################################################

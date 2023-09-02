@@ -37,7 +37,7 @@ jobs:
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: build
+          name: gradle-build-result
           path: build
 
       - name: 빌드 결과 slack 알람 보내기
@@ -57,7 +57,8 @@ jobs:
       - name: gradle 빌드 결과물 다운로드
         uses: actions/download-artifact@v2
         with:
-          name: build
+          name: gradle-build-result
+          path: build
 
       # https://github.com/EnricoMi/publish-unit-test-result-action
       - name: 테스트 결과를 PR 코멘트에 자동 작성

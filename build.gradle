@@ -36,12 +36,12 @@ dependencies {
 }
 
 //// -------------------- ( docker 빌드를 위한 설정 ) --------------------
-//
-//jar {
-//    // 빌드시 ...plain.jar 생성 X
-//    enabled = false
-//}
-//
+
+jar {
+    // 빌드시 ...plain.jar 생성 X
+    enabled = false
+}
+
 //// -------------------- ( jacoco ) --------------------
 //
 //jacoco {

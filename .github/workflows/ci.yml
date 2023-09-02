@@ -51,6 +51,7 @@ jobs:
         if: always()
         with:
           report_paths: /build/test-results/test/TEST-*.xml
+          token: ${{ github.token }}
 
       # https://github.com/8398a7/action-slack
       - name: 빌드 실패시 slack 알람 보내기

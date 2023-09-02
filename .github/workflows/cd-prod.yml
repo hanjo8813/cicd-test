@@ -1,16 +1,16 @@
 name: cd-prod
 
-on:
-  push:
-    branches: [ "main" ]
+#on:
+#  push:
+#    branches: [ "main" ]
+on: workflow_dispatch
 
 jobs:
   deploy-ec2:
     environment: prod
     runs-on: ubuntu-latest
-
     steps:
-      - name: Deploy to EC2
+      - name: EC2에 원격 접속 후 배포하기
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_INSTANCE_HOST }}

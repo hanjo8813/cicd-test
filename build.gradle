@@ -2,6 +2,10 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.1.2'
     id 'io.spring.dependency-management' version '1.1.2'
+
+    // 추가된 플러그인
+    id 'jacoco'
+    id 'org.sonarqube' version '4.3.1.3277' // https://plugins.gradle.org/plugin/org.sonarqube
 }
 
 group = 'com.example'
@@ -31,11 +35,80 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
+// -------------------- ( docker 빌드를 위한 설정 ) --------------------
 
 //jar {
 //    // 빌드시 ...plain.jar 생성 X
 //    enabled = false
 //}
+
+// -------------------- ( jacoco ) --------------------
+
+jacoco {
+    // https://www.eclemma.org/jacoco/
+    toolVersion = '0.8.10'
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true     // sonarqube 연동용
+        html.required = true    // 로컬 확인용
+        csv.required = false
+
+        //  리포트 타입마다 저장 경로 설정 가능. 근데 웬만하면 안바꿈
+//          html.destination file("$buildDir/jacoco.html")
+    }
+
+    // 결과 리포트에서 제외할 클래스 (보통 excludes와 맞춰줌)
+    afterEvaluate {
+        classDirectories.setFrom(
+                files(classDirectories.files.collect {
+                    fileTree(dir: it, excludes: [
+                            '**/CicdTestApplication.class',
+                            '**/TestController.class'
+                    ])
+                })
+        )
+    }
+
+    finalizedBy jacocoTestCoverageVerification
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        // 해석 : 각각 클래스 단위로 검사 -> 특정 클래스의 line 커버리지가 80이 안되는 경우 실패
+        rule {
+            enabled = true
+
+            // 커버리지 체크 단위
+            // BUNDLE, CLASS, GROUP, METHOD, PACKAGE, SOURCEFILE
+            element = 'CLASS'
+
+            // 실패 기준
+            limit {
+                // 커버리지 측정 단위
+                // LINE, BRANCH, CLASS, METHOD, INSTRUCTION, COMPLEXITY
+                counter = 'LINE'
+
+                // 측정결과 표현 방식
+                // COVEREDCOUNT, COVEREDRATIO, MISSEDCOUNT, MISSEDRATIO, TOTALCOUNT
+                value = 'COVEREDRATIO'
+                minimum = 0.80
+            }
+
+            // ignore 클래스 지정
+            excludes = [
+                    '*.CicdTestApplication',
+                    '*.TestController'
+            ]
+        }
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+    // 테스트마다 커버리지 검사 -> 빌드시에도 검사함
+    finalizedBy jacocoTestReport
+}
+
+// -------------------- ( sonarqube  ) --------------------

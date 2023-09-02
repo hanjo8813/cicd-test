@@ -18,4 +18,9 @@ public class TestController {
         return ResponseEntity.ok(mySecret);
     }
 
+    @GetMapping("/2")
+    public ResponseEntity<String> test2() {
+        return ResponseEntity.ok("v1");
+    }
+
 }

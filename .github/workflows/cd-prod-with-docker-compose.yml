@@ -72,15 +72,15 @@ jobs:
           target: "/srv/deploy"     # ec2 서버 내부 경로
           strip_components: 1       # 덮어쓰기할 file depth
 
-#      - name: EC2에 원격 접속 후 배포하기
-#        uses: appleboy/ssh-action@master
-#        with:
-#          host: ${{ secrets.EC2_INSTANCE_HOST }}
-#          port: ${{ secrets.EC2_INSTANCE_PORT }}
-#          username: ${{ secrets.EC2_INSTANCE_USERNAME }}
-#          key: ${{ secrets.EC2_INSTANCE_PRIVATE_KEY }}
-#          script: |
-#            docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY }}:${{ secrets.DOCKER_TAG }}
-#            docker-compose -p compose-prod down
-#            docker-compose -p compose-prod up -d
-#            docker image prune -f
+      - name: EC2에 원격 접속 후 배포하기
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_INSTANCE_HOST }}
+          port: ${{ secrets.EC2_INSTANCE_PORT }}
+          username: ${{ secrets.EC2_INSTANCE_USERNAME }}
+          key: ${{ secrets.EC2_INSTANCE_PRIVATE_KEY }}
+          script: |
+            docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY }}:${{ secrets.DOCKER_TAG }}
+            docker-compose -p compose-prod down
+            docker-compose -p compose-prod up -d
+            docker image prune -f

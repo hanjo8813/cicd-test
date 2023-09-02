@@ -17,6 +17,18 @@ permissions:
   pull-requests: write
 
 jobs:
+  assign-reviewer:
+    runs-on: ubuntu-latest
+    steps:
+      # https://github.com/hkusu/review-assign-action
+      - name: PR Assignee + 리뷰어 자동 지정 (PR open 이벤트에만 동작)
+        uses: hkusu/review-assign-action@v1
+        with:
+          assignees: ${{ github.actor }}
+          reviewers: hanjo8813, kylekim2123
+          max-num-of-reviewers: 2
+          ready-comment: '<reviewers> 코드 리뷰 해주세요~'
+
   build-gradle-and-report:
     runs-on: ubuntu-latest
     steps:
@@ -35,18 +47,18 @@ jobs:
         with:
           arguments: build
           # 기본적으로 캐싱은 활성화되어 있음 (안건드려도 됨)
-#          cache-read-only: true
-#          cache-write-only: true
+      #          cache-read-only: true
+      #          cache-write-only: true
 
       # https://github.com/EnricoMi/publish-unit-test-result-action
-      - name: 테스트 결과를 PR 코멘트에 자동 작성
+      - name: 테스트 결과를 'PR 코멘트'로 자동 작성
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()  # 실패 여부 상관없이 항상 실행~
         with:
           files: build/test-results/test/TEST-*.xml
 
       # https://github.com/mikepenz/action-junit-report
-      - name: 테스트 코드 중 테스트 실패한 부분에 PR 코멘트 자동 작성
+      - name: 테스트 코드 중 테스트 실패한 부분에 'PR check'로 자동 작성
         uses: mikepenz/action-junit-report@v3
         if: always()
         with:

@@ -81,6 +81,7 @@ jobs:
           key: ${{ secrets.EC2_INSTANCE_PRIVATE_KEY }}
           script: |
             docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY }}:${{ secrets.DOCKER_TAG }}
+            cd /srv/deploy/prod
             docker-compose -p compose-prod down
             docker-compose -p compose-prod up -d
             docker image prune -f

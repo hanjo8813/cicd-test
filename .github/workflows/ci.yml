@@ -71,7 +71,7 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()  # 실패 여부 상관없이 항상 실행~
         with:
-          files: /build/test-results/test/TEST-*.xml
+          files: build/test-results/test/TEST-*.xml
 
       - run: pwd
       - run: ls

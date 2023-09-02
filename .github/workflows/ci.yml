@@ -1,17 +1,10 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
-
 name: ci
 
 on:
   pull_request:
     branches: [ "main", "dev" ]
 
-# 이렇게 안하고 repository settings 에서 설정해도 된다.
+# 이렇게 안하고 repository settings 에서 설정해도됨
 permissions:
   checks: write
   pull-requests: write
@@ -45,7 +38,10 @@ jobs:
       - name: gradle 빌드하기
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: build
+          arguments: build sonar --info
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           # 기본적으로 캐싱은 활성화되어 있음 (안건드려도 됨)
       #          cache-read-only: true
       #          cache-write-only: true
@@ -63,7 +59,6 @@ jobs:
         if: always()
         with:
           report_paths: build/test-results/test/TEST-*.xml
-#          token: ${{ github.token }}
 
       # https://github.com/8398a7/action-slack
       - name: 빌드 실패시 slack 알람 보내기

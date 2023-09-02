@@ -11,12 +11,13 @@ on:
   pull_request:
     branches: [ "main", "dev" ]
 
+# 이렇게 안하고 repository settings 에서 설정해도 된다.
 permissions:
   checks: write
   pull-requests: write
 
 jobs:
-  build-gradle:
+  build-gradle-and-report:
     runs-on: ubuntu-latest
     steps:
       - name: github 체크아웃
@@ -37,33 +38,6 @@ jobs:
 #          cache-read-only: true
 #          cache-write-only: true
 
-      # https://github.com/actions/upload-artifact
-      - name: gradle 빌드 결과물을 아티팩트 스토리지에 업로드
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: gradle-build-result
-          path: build
-
-      - name: 빌드 실패시 slack 알람 보내기
-        uses: 8398a7/action-slack@v3
-        if: failure()
-        with:
-          status: ${{ job.status }}
-          fields: repo, message, commit, author, action, eventName, ref, workflow, job,took
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_URL_CICD }}
-
-  test-result-comment:
-    runs-on: ubuntu-latest
-    needs: [ build-gradle ]
-    steps:
-      - name: gradle 빌드 결과물 다운로드
-        uses: actions/download-artifact@v2
-        with:
-          name: gradle-build-result
-          path: build
-
       # https://github.com/EnricoMi/publish-unit-test-result-action
       - name: 테스트 결과를 PR 코멘트에 자동 작성
         uses: EnricoMi/publish-unit-test-result-action@v2
@@ -76,5 +50,14 @@ jobs:
         uses: mikepenz/action-junit-report@v3
         if: always()
         with:
-          token: ${{ github.token }}
           report_paths: /build/test-results/test/TEST-*.xml
+
+      # https://github.com/8398a7/action-slack
+      - name: 빌드 실패시 slack 알람 보내기
+        uses: 8398a7/action-slack@v3
+        if: failure()
+        with:
+          status: ${{ job.status }}
+          fields: repo, message, commit, author, action, eventName, ref, workflow, job,took
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_URL_CICD }}

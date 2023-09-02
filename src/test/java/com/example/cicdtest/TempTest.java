@@ -1,5 +1,7 @@
 package com.example.cicdtest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.Test;
 
 class TempTest {
@@ -12,7 +14,7 @@ class TempTest {
 
     @Test
     void testFail() {
-        throw new RuntimeException();
+        assertThat(false).isTrue();
     }
 
 }

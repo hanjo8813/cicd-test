@@ -10,3 +10,5 @@ services:
       - SPRING_PROFILES_ACTIVE=prod
     env_file:
       - spring.env
+
+# ec2에서 실행되야 함!!!

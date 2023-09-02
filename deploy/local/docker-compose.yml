@@ -1,33 +1,42 @@
 version: "3"
 
-services:
-  spring:
-    build: ../..
-    image: spring-image-local
-    container_name: spring-container-local
-    ports:
-      - "8080:8080"
-    environment:
-      - SPRING_PROFILES_ACTIVE=local
-      - MY_SECRET=locallocal
-
 #services:
 #  spring:
-#    image: ${DOCKER_USERNAME}/${DOCKER_REPOSITORY}:${DOCKER_TAG}
-#    container_name: ${DOCKER_TAG}
+#    build: ../..
+#    image: spring-image-local
+#    container_name: spring-container-local
 #    ports:
 #      - "8080:8080"
-#    # 노출되도 되는 환경변수
 #    environment:
 #      - SPRING_PROFILES_ACTIVE=local
-#    # 노출되면 안되는 환경변수
-#    env_file:
-#      - spring.env
+#      - MY_SECRET=locallocal
+
+
+services:
+  spring:
+    image: ${DOCKER_USERNAME}/${DOCKER_REPOSITORY}:${DOCKER_TAG}
+    container_name: ${DOCKER_TAG}
+    ports:
+      - "8080:8080"
+    # 노출되도 되는 환경변수
+    environment:
+      - SPRING_PROFILES_ACTIVE=local
+    # 노출되면 안되는 환경변수
+    env_file:
+      - spring.env
 
 
 # -------------------------------------
 
-# 도커 컴포즈 생성 + 실행 : docker-compose -p spring-compose up -d
-# 도커 컴포즈 종료 : docker-compose -p spring-compose stop
-# 도커 컴포즈 재실행 : docker-compose -p spring-compose start
-# 도커 컴포즈 종료 + 삭제 : docker-compose -p spring-compose down
+# 다수의 컨테이너를 연관시켜서 한번에 실행할 수 있다 !!
+# 복잡한 빌드 및 실행 명령어를 스크립트화 할 수 있다!!
+# 환경변수도 파일단위로 관리 가능하다!!
+
+# dockerfile -> image -> container
+# docker-compose.yml -> dockerfile -> image -> container -> compose
+# docker-compose.yml -> image pull -> container -> compose
+
+# 도커 컴포즈 생성 + 실행 : docker-compose -p cicd-test-compose up -d
+# 도커 컴포즈 종료 : docker-compose -p cicd-test-compose stop
+# 도커 컴포즈 재실행 : docker-compose -p cicd-test-compose start
+# 도커 컴포즈 종료 + 삭제 : docker-compose -p cicd-test-compose down

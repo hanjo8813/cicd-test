@@ -15,9 +15,10 @@ jobs:
   build-gradle:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: github 체크아웃
+        uses: actions/checkout@v3
 
-      - name: Set up JDK 17
+      - name: jdk 세팅
         uses: actions/setup-java@v3
         with:
           java-version: '17'
@@ -39,7 +40,6 @@ jobs:
         with:
           files: build/test-results/test/TEST-*.xml
 
-
       # https://github.com/actions/upload-artifact
       - name: gradle 빌드 결과물을 아티팩트 스토리지에 업로드
         uses: actions/upload-artifact@v3
@@ -48,14 +48,13 @@ jobs:
           name: gradle-build-result
           path: build
 
-      - name: 빌드 결과 slack 알람 보내기
+      - name: 빌드 실패시 slack 알람 보내기
         uses: 8398a7/action-slack@v3
-        if: always()
+        if: failure()
         with:
-          status: ${{job.status}}
-          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+          status: ${{ job.status }}
+          fields: repo, message, commit, author, action, eventName, ref, workflow, job,took
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_URL_CICD }}
 
 #  test-result-comment:

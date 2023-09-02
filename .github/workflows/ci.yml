@@ -1,8 +1,9 @@
 name: ci
 
-on:
-  pull_request:
-    branches: [ "main", "dev" ]
+#on:
+#  pull_request:
+#    branches: [ "main", "dev" ]
+on: workflow_dispatch
 
 # 이렇게 안하고 repository settings 에서 설정해도됨
 permissions:
@@ -34,17 +35,22 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: SonarCloud 결과물 캐싱하기
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
       # https://github.com/gradle/gradle-build-action
-      - name: gradle 빌드하기
+      - name: gradle 빌드하기 (sonarqube 포함)
         uses: gradle/gradle-build-action@v2
         with:
           arguments: build sonar --info
+        # SonarCloud 연동을 위한 환경변수
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          # 기본적으로 캐싱은 활성화되어 있음 (안건드려도 됨)
-      #          cache-read-only: true
-      #          cache-write-only: true
 
       # https://github.com/EnricoMi/publish-unit-test-result-action
       - name: 테스트 결과를 'PR 코멘트'로 자동 작성
@@ -69,3 +75,15 @@ jobs:
           fields: repo, message, commit, author, action, eventName, ref, workflow, job,took
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_URL_CICD }}
+
+
+############################# ci 정리 #############################
+# 1. ci 워크플로우에서 `gradlew build sonar --info` 명령어 실행
+# 2. 일단 build부터 돌아감 → test도 같이 돌아감
+# 3. test 돌면 JACOCO 돌아감
+#    -> 여기서 커버리지 만족 못하면 build는 취소됨
+#    -> 실패해도 JACOCO xml 리포트는 남음
+# 4. build 후 gradle sonar task 실행됨
+# 5. 정적코드 분석 결과 + JACOCO 리포트 엮어서 sonar 리포트로 만들고 sonar cloud로 전송
+# 6. 나머지 애들은 위 step 결과와 상관없이 돌아감.
+####################################################################

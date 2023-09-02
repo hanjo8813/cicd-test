@@ -10,4 +10,9 @@ class TempTest {
         TestTarget.test2();
     }
 
+    @Test
+    void testFail() {
+        throw new RuntimeException();
+    }
+
 }

@@ -17,17 +17,17 @@ permissions:
   pull-requests: write
 
 jobs:
-  assign-reviewer:
-    runs-on: ubuntu-latest
-    steps:
-      # https://github.com/hkusu/review-assign-action
-      - name: PR Assignee + 리뷰어 자동 지정 (PR open 이벤트에만 동작)
-        uses: hkusu/review-assign-action@v1
-        with:
-          assignees: ${{ github.actor }}
-          reviewers: hanjo8813, kylekim2123
-          max-num-of-reviewers: 2
-          ready-comment: '<reviewers> 코드 리뷰 해주세요~'
+#  assign-reviewer:
+#    runs-on: ubuntu-latest
+#    steps:
+#      # https://github.com/hkusu/review-assign-action
+#      - name: PR Assignee + 리뷰어 자동 지정 (PR open 이벤트에만 동작)
+#        uses: hkusu/review-assign-action@v1
+#        with:
+#          assignees: ${{ github.actor }}
+#          reviewers: hanjo8813, kylekim2123
+#          max-num-of-reviewers: 2
+#          ready-comment: '<reviewers> 코드 리뷰 해주세요~'
 
   build-gradle-and-report:
     runs-on: ubuntu-latest
@@ -63,7 +63,7 @@ jobs:
         if: always()
         with:
           report_paths: build/test-results/test/TEST-*.xml
-          token: ${{ github.token }}
+#          token: ${{ github.token }}
 
       # https://github.com/8398a7/action-slack
       - name: 빌드 실패시 slack 알람 보내기

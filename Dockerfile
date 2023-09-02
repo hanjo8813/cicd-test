@@ -1,8 +1,10 @@
 FROM eclipse-temurin:17-jdk
 ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java", "-jar", "/app.jar"]
-#ENTRYPOINT ["java", "-Dspring.profiles.active=${SPRING_PROFILE}", "-jar", "/app.jar"]
+# 컴터 켜지는 순간 실행될 명령어
+#ENTRYPOINT ["java", "-jar", "/app.jar"]
+
+ENTRYPOINT ["java", "-Dspring.profiles.active=${SPRING_PROFILE}", "-jar", "/app.jar"]
 
 # -------------------------------------
 
@@ -19,8 +21,6 @@ ENTRYPOINT ["java", "-jar", "/app.jar"]
 # 컨테이너 삭제 : docker rm spring-container-local
 
 # 도커허브 로그인 : docker login -u username -p password
-# 도커허브 형식에 맞춰 이미지 빌드 : docker build -t username/repository:tag .
-# 도커허브에 이미지 푸시 : docker push username/repository:tag
-# 도커허브 이미지 풀 : docker pull username/repository:tag
-
-# hanjo8813/cicd-test:spring-local
+# 도커허브 형식에 맞춰 이미지 빌드 : docker build -t hanjo8813/cicd-test:spring-local .
+# 도커허브에 이미지 푸시 : docker push hanjo8813/cicd-test:spring-local
+# 도커허브 이미지 풀 : docker pull hanjo8813/cicd-test:spring-local

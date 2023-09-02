@@ -48,7 +48,9 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY }}:${{ secrets.DOCKER_TAG }}
-          platforms: linux/arm64
+          platforms: |
+            linux/arm64
+            linux/amd64
 
       # https://github.com/appleboy/ssh-action
       - name: EC2에 원격 접속 후 배포하기
@@ -62,14 +64,14 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY }}:${{ secrets.DOCKER_TAG }}
             
             docker stop ${{ secrets.DOCKER_TAG }}
-            
+
             docker rm ${{ secrets.DOCKER_TAG }}
             
             docker run -d \
             --name ${{ secrets.DOCKER_TAG }} \
             -p 8082:8080 \
             -e MY_SECRET=${{ secrets.MY_SECRET }} \
-            -e -e SPRING_PROFILE=prod \
+            -e SPRING_PROFILE=prod \
             ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY }}:${{ secrets.DOCKER_TAG }}
             
             docker image prune -f

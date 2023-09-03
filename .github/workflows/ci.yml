@@ -1,9 +1,9 @@
 name: ci
 
-#on:
-#  pull_request:
-#    branches: [ "main", "dev" ]
-on: workflow_dispatch
+on:
+  pull_request:
+    branches: [ "main", "dev" ]
+#on: workflow_dispatch
 
 # 이렇게 안하고 repository settings 에서 설정해도됨
 permissions:

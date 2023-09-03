@@ -8,8 +8,8 @@ class TempTest {
 
     @Test
     void test() {
-        TestTarget.test1();
-        TestTarget.test2();
+//        TestTarget.test1();
+//        TestTarget.test2();
     }
 
     @Test

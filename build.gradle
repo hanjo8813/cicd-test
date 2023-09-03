@@ -115,9 +115,10 @@ tasks.named('test') {
 
 sonarqube {
     properties {
-        property("sonar.projectKey", "hanjo8813_cicd-test")
-        property("sonar.organization", "cicd-test-key")
-        property("sonar.host.url", "https://sonarcloud.io")
-        property("sonar.coverage.jacoco.xmlReportPaths", "$buildDir/reports/jacoco/test/jacocoTestReport.xml")
+        property "sonar.projectKey", "hanjo8813_cicd-test"
+        property "sonar.organization", "cicd-test-key"
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.coverage.jacoco.xmlReportPaths", "$buildDir/reports/jacoco/test/jacocoTestReport.xml"
+        property "sonar.exclusions", "**/CicdTestApplication.java, **/TestController.java" // jacoco exclude를 인식하지 못하기 때문에 여기서도 추가해줘야함;
     }
 }

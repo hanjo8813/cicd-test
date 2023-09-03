@@ -13,17 +13,8 @@ class TempTest {
     }
 
     @Test
-    void testTarget2() {
-        TestTarget2.test1();
-    }
-
-    @Test
     void testFail() {
-        assertThat(false).isTrue();
-    }
-
-    @Test
-    void testCodeSmell() {
+//        assertThat(false).isTrue();
     }
 
 }

@@ -19,7 +19,7 @@ class TempTest {
 
     @Test
     void testFail() {
-//        assertThat(false).isTrue();
+        assertThat(false).isTrue();
     }
 
     @Test

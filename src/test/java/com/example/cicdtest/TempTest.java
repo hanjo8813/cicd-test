@@ -17,4 +17,9 @@ class TempTest {
 //        assertThat(false).isTrue();
     }
 
+    @Test
+    void testCodeSmell() {
+        if(1 == 1) {}
+    }
+
 }

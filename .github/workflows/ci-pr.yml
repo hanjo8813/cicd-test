@@ -36,22 +36,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: SonarCloud 결과물 캐싱하기
-        uses: actions/cache@v3
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-
       # https://github.com/gradle/gradle-build-action
-      - name: gradle 빌드 + 테스트 + sonarqube PR 코멘트 자동 작성 (code smell, test coverage 등)
+      - name: gradle 빌드 + 테스트
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: build sonar --info
-        # SonarCloud 연동을 위한 환경변수
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          arguments: build
 
       # https://github.com/EnricoMi/publish-unit-test-result-action
       - name: 테스트 결과를 'PR 코멘트'로 자동 작성
@@ -66,6 +55,24 @@ jobs:
         if: always()
         with:
           report_paths: build/test-results/test/TEST-*.xml
+
+      - name: SonarCloud 결과물 캐싱하기
+        uses: actions/cache@v3
+        if: always()
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: sonarqube PR 코멘트 자동 작성 (code smell, test coverage 등)
+        uses: gradle/gradle-build-action@v2
+        if: always()
+        with:
+          arguments: sonar --info
+        # SonarCloud 연동을 위한 환경변수
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       # https://github.com/8398a7/action-slack
       - name: 빌드 실패시 slack 알람 보내기

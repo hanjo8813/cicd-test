@@ -115,9 +115,10 @@ tasks.named('test') {
 
 sonarqube {
     properties {
-        property("sonar.projectKey", "hanjo8813_cicd-test")
-        property("sonar.organization", "cicd-test-key")
-        property("sonar.host.url", "https://sonarcloud.io")
-        property("sonar.coverage.jacoco.xmlReportPaths", "$buildDir/reports/jacoco/test/jacocoTestReport.xml")
+        property "sonar.projectKey", "hanjo8813_cicd-test"
+        property "sonar.organization", "cicd-test-key"
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.coverage.jacoco.xmlReportPaths", "$buildDir/reports/jacoco/test/jacocoTestReport.xml"
+        property "sonar.exclusions", "**/CicdTestApplication.class, **/TestController.class"
     }
 }

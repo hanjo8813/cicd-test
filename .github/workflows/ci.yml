@@ -43,7 +43,7 @@ jobs:
           restore-keys: ${{ runner.os }}-sonar
 
       # https://github.com/gradle/gradle-build-action
-      - name: gradle 빌드하기 (sonarqube 포함)
+      - name: gradle 빌드 + 테스트 + sonarqube PR 코멘트 자동 작성 (code smell, test coverage 등)
         uses: gradle/gradle-build-action@v2
         with:
           arguments: build sonar --info
@@ -72,7 +72,7 @@ jobs:
         if: failure()
         with:
           status: ${{ job.status }}
-          fields: repo, message, commit, author, action, eventName, ref, workflow, job,took
+          fields: repo, message, commit, author, action, eventName, ref, workflow, job, took
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_URL_CICD }}
 

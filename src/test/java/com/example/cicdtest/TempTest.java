@@ -6,15 +6,15 @@ import org.junit.jupiter.api.Test;
 
 class TempTest {
 
-//    @Test
-//    void test() {
-//        TestTarget.test1();
-//        TestTarget.test2();
-//    }
-//
-//    @Test
-//    void testFail() {
-//        assertThat(false).isTrue();
-//    }
+    @Test
+    void test() {
+        TestTarget.test1();
+        TestTarget.test2();
+    }
+
+    @Test
+    void testFail() {
+        assertThat(false).isTrue();
+    }
 
 }

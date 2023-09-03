@@ -19,7 +19,6 @@ class TempTest {
 
     @Test
     void testCodeSmell() {
-        if(1 == 1) {}
     }
 
 }

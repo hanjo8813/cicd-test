@@ -1,10 +1,11 @@
-name: ci
+name: ci-pr
 
 on:
   pull_request:
     branches: [ "main", "dev" ]
-#on: workflow_dispatch
+    types: [ opened, synchronize, reopened ]
 
+# PR check, 코멘트를 위한 권한 설정
 # 이렇게 안하고 repository settings 에서 설정해도됨
 permissions:
   checks: write

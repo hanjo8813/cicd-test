@@ -107,7 +107,7 @@ jacocoTestCoverageVerification {
 
 tasks.named('test') {
     useJUnitPlatform()
-    // 테스트마다 커버리지 검사 -> 빌드시에도 검사함
+    // 테스트 태스크마다 커버리지 검사 -> 빌드시에도 검사함
     finalizedBy jacocoTestReport
 }
 

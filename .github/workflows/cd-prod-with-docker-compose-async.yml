@@ -1,9 +1,9 @@
 name: cd-prod-with-docker-compose-async
 
-on:
-  push:
-    branches: [ "main" ]
-#on: workflow_dispatch
+#on:
+#  push:
+#    branches: [ "main" ]
+on: workflow_dispatch
 
 jobs:
   docker-build-push:

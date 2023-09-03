@@ -25,7 +25,7 @@ jobs:
           restore-keys: ${{ runner.os }}-sonar
 
       # 테스트에서 터지면 sonar 명령어도 취소됨 -> 반드시 PR에서 테스트가 완벽히 검증된 상태여야 함.
-      - name: gradle 빌드 + 테스트 -> sonarqube branch 업데이트
+      - name: gradle 빌드 + 테스트 -> SonarCloud branch 업데이트
         uses: gradle/gradle-build-action@v2
         with:
           arguments: build sonar --info

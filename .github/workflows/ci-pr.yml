@@ -12,17 +12,17 @@ permissions:
   pull-requests: write
 
 jobs:
-#  assign-reviewer:
-#    runs-on: ubuntu-latest
-#    steps:
-#      # https://github.com/hkusu/review-assign-action
-#      - name: PR Assignee + 리뷰어 자동 지정 (PR open 이벤트에만 동작)
-#        uses: hkusu/review-assign-action@v1
-#        with:
-#          assignees: ${{ github.actor }}
-#          reviewers: hanjo8813, kylekim2123
-#          max-num-of-reviewers: 2
-#          ready-comment: '<reviewers> 코드 리뷰 해주세요~'
+  assign-reviewer:
+    runs-on: ubuntu-latest
+    steps:
+      # https://github.com/hkusu/review-assign-action
+      - name: PR Assignee + 리뷰어 자동 지정 (PR open 이벤트에만 동작)
+        uses: hkusu/review-assign-action@v1
+        with:
+          assignees: ${{ github.actor }}
+          reviewers: hanjo8813
+          max-num-of-reviewers: 2
+          ready-comment: '당첨된 사람 : <reviewers>'
 
   build-gradle-and-report:
     runs-on: ubuntu-latest
@@ -36,19 +36,26 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      # https://github.com/gradle/gradle-build-action
+      - name: gradle 빌드 + 테스트
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
+
+      # https://github.com/actions/cache
       - name: SonarCloud 결과물 캐싱하기
         uses: actions/cache@v3
+        if: always()
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      # https://github.com/gradle/gradle-build-action
-      - name: gradle 빌드 + 테스트 + sonarqube PR 코멘트 자동 작성 (code smell, test coverage 등)
+      - name: gradle SonarCloud 분석 + PR 코멘트 자동 작성
         uses: gradle/gradle-build-action@v2
+        if: always()
         with:
-          arguments: build sonar --info
-        # SonarCloud 연동을 위한 환경변수
+          arguments: sonar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -79,12 +86,13 @@ jobs:
 
 
 ############################# ci 정리 #############################
-# 1. ci 워크플로우에서 `gradlew build sonar --info` 명령어 실행
+# 1. gradle build !
 # 2. 일단 build부터 돌아감 → test도 같이 돌아감
 # 3. test 돌면 JACOCO 돌아감
 #    -> 여기서 커버리지 만족 못하면 build는 취소됨
 #    -> 실패해도 JACOCO xml 리포트는 남음
-# 4. build 후 gradle sonar task 실행됨
-# 5. 정적코드 분석 결과 + JACOCO 리포트 엮어서 sonar 리포트로 만들고 sonar cloud로 전송
-# 6. 나머지 애들은 위 step 결과와 상관없이 돌아감.
+# 4. 아래의 테스트 관련 step은 빌드 결과와 상관없이 돌아감.
+# 5. gradle sonar task 실행됨
+# 6. 정적코드 분석 결과 + JACOCO 리포트 엮어서 sonar 리포트로 만들고 sonar cloud로 전송
+# 7. 뭐 하나 실패하면 슬랙 알람
 ####################################################################

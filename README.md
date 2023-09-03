@@ -4,8 +4,6 @@
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=hanjo8813_cicd-test&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=hanjo8813_cicd-test)
 
-[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=hanjo8813_cicd-test)](https://sonarcloud.io/summary/new_code?id=hanjo8813_cicd-test)
-
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=hanjo8813_cicd-test&metric=coverage)](https://sonarcloud.io/summary/new_code?id=hanjo8813_cicd-test)
 
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=hanjo8813_cicd-test&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=hanjo8813_cicd-test)

@@ -7,9 +7,14 @@ import org.junit.jupiter.api.Test;
 class TempTest {
 
     @Test
-    void test() {
+    void testTarget() {
         TestTarget.test1();
         TestTarget.test2();
+    }
+
+    @Test
+    void testTarget2() {
+        TestTarget2.test1();
     }
 
     @Test

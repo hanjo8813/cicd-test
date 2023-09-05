@@ -15,6 +15,7 @@ jobs:
   assign-reviewer:
     runs-on: ubuntu-latest
     steps:
+      # org team 기능 사용시 쓸 필요 X
       # https://github.com/hkusu/review-assign-action
       - name: PR Assignee + 리뷰어 자동 지정 (PR open 이벤트에만 동작)
         uses: hkusu/review-assign-action@v1
@@ -74,6 +75,7 @@ jobs:
         with:
           report_paths: build/test-results/test/TEST-*.xml
 
+      # slack github app 사용시 쓸 필요 X
       # https://github.com/8398a7/action-slack
       - name: 빌드 실패시 slack 알람 보내기
         uses: 8398a7/action-slack@v3

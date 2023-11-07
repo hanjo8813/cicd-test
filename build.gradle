@@ -35,7 +35,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-//// -------------------- ( docker 빌드를 위한 설정 ) --------------------
+// -------------------- ( docker 빌드를 위한 설정 ) --------------------
 
 jar {
     // 빌드시 ...plain.jar 생성 X
@@ -47,6 +47,12 @@ jar {
 jacoco {
     // https://www.eclemma.org/jacoco/
     toolVersion = '0.8.10'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+    // 테스트 태스크마다 커버리지 검사 -> 빌드시에도 검사함
+    finalizedBy jacocoTestReport
 }
 
 jacocoTestReport {
@@ -103,12 +109,6 @@ jacocoTestCoverageVerification {
             ]
         }
     }
-}
-
-tasks.named('test') {
-    useJUnitPlatform()
-    // 테스트 태스크마다 커버리지 검사 -> 빌드시에도 검사함
-    finalizedBy jacocoTestReport
 }
 
 // -------------------- ( sonarqube  ) --------------------

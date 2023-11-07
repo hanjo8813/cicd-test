@@ -12,18 +12,18 @@ permissions:
   pull-requests: write
 
 jobs:
-  assign-reviewer:
-    runs-on: ubuntu-latest
-    steps:
-      # org team 기능 사용시 쓸 필요 X
-      # https://github.com/hkusu/review-assign-action
-      - name: PR Assignee + 리뷰어 자동 지정 (PR open 이벤트에만 동작)
-        uses: hkusu/review-assign-action@v1
-        with:
-          assignees: ${{ github.actor }}
-          reviewers: hanjo8813
-          max-num-of-reviewers: 2
-          ready-comment: '당첨된 사람 : <reviewers>'
+#  assign-reviewer:
+#    runs-on: ubuntu-latest
+#    steps:
+#      # org team 기능 사용시 쓸 필요 X
+#      # https://github.com/hkusu/review-assign-action
+#      - name: PR Assignee + 리뷰어 자동 지정 (PR open 이벤트에만 동작)
+#        uses: hkusu/review-assign-action@v1
+#        with:
+#          assignees: ${{ github.actor }}
+#          reviewers: hanjo8813
+#          max-num-of-reviewers: 2
+#          ready-comment: '당첨된 사람 : <reviewers>'
 
   build-gradle-and-report:
     runs-on: ubuntu-latest
@@ -75,16 +75,17 @@ jobs:
         with:
           report_paths: build/test-results/test/TEST-*.xml
 
-      # slack github app 사용시 쓸 필요 X
+      # slack github app 사용시 굳이 쓸 필요는 없음
+      # 단, ci와 같이 자주 동작하는 job은 fail 알람만 받고 싶을 수 있음 -> 이럴때 쓴다. (github 공식 slack app은 지원 X)
       # https://github.com/8398a7/action-slack
-      - name: 빌드 실패시 slack 알람 보내기
-        uses: 8398a7/action-slack@v3
-        if: failure()
-        with:
-          status: ${{ job.status }}
-          fields: repo, message, commit, author, action, eventName, ref, workflow, job, took
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_URL_CICD }}
+#      - name: 빌드 실패시 slack 알람 보내기
+#        uses: 8398a7/action-slack@v3
+#        if: failure()
+#        with:
+#          status: ${{ job.status }}
+#          fields: repo, message, commit, author, action, eventName, ref, workflow, job, took
+#        env:
+#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_URL_CICD }}
 
 
 ############################# ci 정리 #############################

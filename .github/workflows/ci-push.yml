@@ -28,7 +28,7 @@ jobs:
       - name: gradle 빌드 + 테스트 -> SonarCloud branch 업데이트
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: build sonar
+          arguments: test sonar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

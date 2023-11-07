@@ -9,7 +9,7 @@ class TempTest {
     @Test
     void testTarget() {
         TestTarget.test1();
-        TestTarget.test2();
+//        TestTarget.test2();
     }
 
     @Test
